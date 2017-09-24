@@ -45,11 +45,10 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
     page = papyrus_pb2.Page()
     # Open and parse papyrus page using protobuf
     page.ParseFromString(open(path, 'rb').read())
-    # Create a new svg surface for drawing
+    # Create a new pdf surface for drawing
 
     if page.background.width == 0 and page.background.height == 0:
         print("Infinite page!")
-
 
         max_x = 0
         max_y = 0
@@ -57,13 +56,23 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
         for item in page.layer.item:
 
             if item.type == papyrus_pb2.Item.Type.Value('Stroke'):
-                if item.stroke.bounds.right > max_x:
-                    max_x = item.stroke.bounds.right
-
-                if item.stroke.bounds.bottom > max_y:
-                    max_y = item.stroke.bounds.bottom
+                bounds = item.stroke.bounds
+            elif item.type == papyrus_pb2.Item.Type.Value('Shape'):
+                if item.shape.type == 'Ellipse':
+                    bounds = item.shape.ellipse.bounds
+            elif item.type == papyrus_pb2.Item.Type.Value('Text'):
+                bounds = item.text.bounds
             else:
                 print item
+                bounds = None
+
+            if bounds is not None:
+                if bounds.right > max_x:
+                    max_x = bounds.right
+
+                if bounds.bottom > max_y:
+                    max_y = bounds.bottom
+            
 
         page.background.width = max_x + 1
         page.background.height = max_y + 1
@@ -85,13 +94,13 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
     
     note_path = new_note_path
 
-    svgpath = note_path + '/svg'
-    makedir(svgpath)
+    pdfpath = note_path + '/pdf'
+    makedir(pdfpath)
 
-    svgfile = svgpath + '/page' + str(page_number) +'.svg'
-    print("Source: %s\nOutput: %s" % (path, svgfile))
+    pdffile = pdfpath + '/page' + str(page_number) +'.pdf'
+    print("Source: %s\nOutput: %s" % (path, pdffile))
 
-    surface = cairocffi.SVGSurface(open(svgfile, 'w'), cm_to_point(page.background.width), cm_to_point(page.background.height))
+    surface = cairocffi.PDFSurface(open(pdffile, 'w'), cm_to_point(page.background.width), cm_to_point(page.background.height))
     context = cairocffi.Context(surface)
 
     # Paint the page white
@@ -113,21 +122,37 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
             context.set_line_cap(cairocffi.LINE_CAP_ROUND)
             context.move_to(0,0)
 
+            if item.stroke.stroke_type == papyrus_pb2.Stroke.Highlight:
+                context.push_group()
+                context.set_source_rgba(argb[1], argb[2], argb[3], 1)
+                context.fill_preserve()
+                context.set_line_cap(cairocffi.LINE_CAP_SQUARE)
+
             for point in item.stroke.point:
                 context.line_to(cm_to_point(point.x), cm_to_point(point.y))
-                if point.HasField('pressure'):
+                if item.stroke.stroke_type == papyrus_pb2.Stroke.Highlight:
+                    context.set_line_width(width)
+                    #context.
+                elif point.HasField('pressure'):
                     context.set_line_width(width * point.pressure)
                 else:
                     context.set_line_width(width)
                 context.stroke()
                 context.move_to(cm_to_point(point.x), cm_to_point(point.y))
+            if item.stroke.stroke_type == papyrus_pb2.Stroke.Highlight:
+                context.pop_group_to_source()
+                context.paint_with_alpha(argb[0])
             context.restore()
         elif item.type == papyrus_pb2.Item.Type.Value('Shape') and item.shape.ellipse is not None:
+
+            width = item.shape.ellipse.weight * 0.3
+
             context.save()
             context.new_sub_path()
             context.translate(cm_to_point(item.shape.ellipse.center_x), cm_to_point(item.shape.ellipse.center_y))
             context.set_line_width(item.shape.ellipse.weight)
             argb = u32_to_4f(item.shape.ellipse.color)
+            context.set_line_width(width)
             context.set_source_rgba(argb[1], argb[2], argb[3], argb[0])
             context.scale(cm_to_point(item.shape.ellipse.radius_x), cm_to_point(item.shape.ellipse.radius_y))
             context.arc(0, 0, 1, (item.shape.ellipse.start_angle / 360) * 2 * math.pi, (item.shape.ellipse.sweep_angle / 360) * 2 * math.pi)
@@ -166,7 +191,7 @@ for i in notebooks:
 directory='./exported/'
 makedir(directory)
 
-directory = directory + time.strftime("%Y-%m-%d_%H:%M:%S")
+directory = directory + time.strftime("%Y-%m-%d")
 makedir(directory)
 
 for i in notebooks:
@@ -181,6 +206,9 @@ for i in notebooks:
 
         count = 1
         for k in pages:
+            if DEBUG:
+                if k[0] != '94f9fae3-6bb4-4c06-96f9-e1298001b3ec':
+                    continue
             print("Processing page %d/%d of %s" % (count, len(pages), j[1]))
             print(k)
             convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, count)
