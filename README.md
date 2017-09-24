@@ -1,5 +1,8 @@
 # Squid Decoder
 
+**REQUIRES PYTHON 2**
+*cairoffi doesn't seem to work with python3*
+
 [Haxelion](https://github.com/haxelion/) reversed engineered part of [Squid (ex Papyrus) application](http://squidnotes.com/) page storage
 format which is based on [Google Protocol Buffers](https://developers.google.com/protocol-buffers/).
 He rewrote part of the format `.proto` file and wrote a demonstration script which uses protobuf and
