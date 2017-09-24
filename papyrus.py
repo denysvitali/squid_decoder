@@ -7,7 +7,7 @@ import cairocffi
 import math
 
 
-DEBUG=True
+DEBUG=False
 
 conn = sqlite3.connect('papyrus.db')
 c = conn.cursor()
