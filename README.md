@@ -41,6 +41,16 @@ Feel free to open an issue if you need it and encourage me to reverse engineer i
 
 ## Usage
 
+Place your papyrus.bak in the project folder, then do:
+```
+unzip papyrus.bak
+python2 papyrus.py
+```
+
+You can now enjoy your notes in .svg format, well organized, in the newly created `exports/year-month-day_hour:minute:second/` folder
+
+## Tool Usage
+
 The `page2svg.py` tool can be simply used with the following command:
 
 ```
