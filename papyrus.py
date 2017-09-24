@@ -49,8 +49,24 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
 
     if page.background.width == 0 and page.background.height == 0:
         print("Infinite page!")
-        page.background.width = 50
-        page.background.height = 150
+
+
+        max_x = 0
+        max_y = 0
+
+        for item in page.layer.item:
+
+            if item.type == papyrus_pb2.Item.Type.Value('Stroke'):
+                if item.stroke.bounds.right > max_x:
+                    max_x = item.stroke.bounds.right
+
+                if item.stroke.bounds.bottom > max_y:
+                    max_y = item.stroke.bounds.bottom
+            else:
+                print item
+
+        page.background.width = max_x + 1
+        page.background.height = max_y + 1
 
     if note_name is None:
         note_name = "Untitled"
@@ -72,8 +88,10 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
     svgpath = note_path + '/svg'
     makedir(svgpath)
 
+    svgfile = svgpath + '/page' + str(page_number) +'.svg'
+    print("Source: %s\nOutput: %s" % (path, svgfile))
 
-    surface = cairocffi.SVGSurface(open(svgpath + '/page' + str(page_number) +'.svg', 'w'), cm_to_point(page.background.width), cm_to_point(page.background.height))
+    surface = cairocffi.SVGSurface(open(svgfile, 'w'), cm_to_point(page.background.width), cm_to_point(page.background.height))
     context = cairocffi.Context(surface)
 
     # Paint the page white
@@ -164,5 +182,6 @@ for i in notebooks:
         count = 1
         for k in pages:
             print("Processing page %d/%d of %s" % (count, len(pages), j[1]))
-            convert_page('data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, count)
+            print(k)
+            convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, count)
             count += 1;
