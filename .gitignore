@@ -1,0 +1,6 @@
+*.bak
+*.db
+*.pyc
+info.json
+/data/
+/exported/
