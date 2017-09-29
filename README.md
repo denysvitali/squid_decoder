@@ -39,6 +39,11 @@ engineered:
 
 Feel free to open an issue if you need it and encourage me to reverse engineer it. Or send a pull request if you've implemented it.
 
+## Installation
+```
+pip install cairocffi protobuf pypdf
+```
+
 ## Usage
 
 Place your papyrus.bak in the project folder, then do:
@@ -47,8 +52,26 @@ unzip papyrus.bak
 python2 papyrus.py
 ```
 
-You can now enjoy your notes in .svg format, well organized, in the newly created `exports/year-month-day_hour:minute:second/` folder
+You can now enjoy your notes in .svg format, well organized, in the newly created `exports/` folder
 
+
+### Jenkins Build
+If you have access to a Jenkins instance, and can create your own jobs, setting up a job for the PDF generation may be very useful.  
+To do so, go to the Jenkins instance page and create a job, add this repo to the build, then in "Build" add "Execute Shell" with the following
+```
+#!/bin/bash
+source ~/.bashrc
+echo "Environment variables for $USER:"
+env
+
+wget 'https://dropbox.com/your-file/papyrus.bak' -O papyrus.bak
+unzip papyrus.bak || true
+
+pip install cairocffi protobuf pypdf
+python2 papyrus.py
+```
+
+If you get an ascii error, go to "Manage Jenkins", then click "Configure" and add the `LC_ALL=en_US.UTF-8` environment variable (maybe you need to add `LANG=en_US.UTF-8` too).
 ## Tool Usage
 
 The `page2svg.py` tool can be simply used with the following command:
