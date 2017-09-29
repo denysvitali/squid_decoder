@@ -86,9 +86,9 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
     new_note_path = note_path
     num = 1;
 
-    while os.path.exists(new_note_path):
-        new_note_path = note_path + '(' + str(num) + ')'
-        num += 1
+    #while os.path.exists(new_note_path):
+    #    new_note_path = note_path + '(' + str(num) + ')'
+    #    num += 1
 
     makedir(note_path)
     
@@ -191,8 +191,8 @@ for i in notebooks:
 directory='./exported/'
 makedir(directory)
 
-directory = directory + time.strftime("%Y-%m-%d")
-makedir(directory)
+#directory = directory + time.strftime("%Y-%m-%d")
+#makedir(directory)
 
 for i in notebooks:
     makedir(directory + "/" + dirsafe(i[2]))
