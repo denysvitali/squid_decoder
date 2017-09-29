@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='papyrus.proto',
   package='',
   syntax='proto2',
-  serialized_pb=_b('\n\rpapyrus.proto\">\n\x04Page\x12\x1f\n\nbackground\x18\x01 \x01(\x0b\x32\x0b.Background\x12\x15\n\x05layer\x18\x03 \x01(\x0b\x32\x06.Layer\"\x91\x03\n\nBackground\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.Background.Type\x12\r\n\x05width\x18\x04 \x01(\x02\x12\x0e\n\x06height\x18\x05 \x01(\x02\x12\r\n\x05\x63olor\x18\x06 \x01(\r\x12\x36\n\x16ruled_paper_background\x18\xe8\x07 \x01(\x0b\x32\x15.RuledPaperBackground\x12\x34\n\x15quad_paper_background\x18\xe9\x07 \x01(\x0b\x32\x14.QuadPaperBackground\x12+\n\x10\x62lank_background\x18\xea\x07 \x01(\x0b\x32\x10.BlankBackground\x12\'\n\x0epdf_background\x18\xeb\x07 \x01(\x0b\x32\x0e.PDFBackground\x12+\n\x10papyr_background\x18\xec\x07 \x01(\x0b\x32\x10.PapyrBackground\"D\n\x04Type\x12\x0e\n\nRuledPaper\x10\x01\x12\r\n\tQuadPaper\x10\x02\x12\t\n\x05\x42lank\x10\x03\x12\x07\n\x03PDF\x10\x04\x12\t\n\x05Papyr\x10\x05\"\x16\n\x14RuledPaperBackground\"\x15\n\x13QuadPaperBackground\"\x11\n\x0f\x42lankBackground\"\x0f\n\rPDFBackground\"\x11\n\x0fPapyrBackground\"4\n\x05Layer\x12\x13\n\x04item\x18\x01 \x03(\x0b\x32\x05.Item\x12\x16\n\x06\x62ounds\x18\x02 \x01(\x0b\x32\x06.RectF\"@\n\x04Rect\x12\x0c\n\x04left\x18\x01 \x01(\x05\x12\r\n\x05right\x18\x02 \x01(\x05\x12\x0b\n\x03top\x18\x03 \x01(\x05\x12\x0e\n\x06\x62ottom\x18\x04 \x01(\x05\"A\n\x05RectF\x12\x0c\n\x04left\x18\x01 \x01(\x02\x12\r\n\x05right\x18\x02 \x01(\x02\x12\x0b\n\x03top\x18\x03 \x01(\x02\x12\x0e\n\x06\x62ottom\x18\x04 \x01(\x02\"\xb4\x01\n\x04Item\x12\x18\n\x04type\x18\x01 \x02(\x0e\x32\n.Item.Type\x12\x18\n\x06stroke\x18\xe8\x07 \x01(\x0b\x32\x07.Stroke\x12\x16\n\x05shape\x18\xe9\x07 \x01(\x0b\x32\x06.Shape\x12\x14\n\x04text\x18\xea\x07 \x01(\x0b\x32\x05.Text\x12\x16\n\x05image\x18\xeb\x07 \x01(\x0b\x32\x06.Image\"2\n\x04Type\x12\n\n\x06Stroke\x10\x01\x12\t\n\x05Shape\x10\x02\x12\x08\n\x04Text\x10\x03\x12\t\n\x05Image\x10\x04\"\xfe\x01\n\x06Stroke\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x0e\n\x06weight\x18\x02 \x01(\x02\x12\x1f\n\x0freference_point\x18\x03 \x01(\x0b\x32\x06.Point\x12\x15\n\x05point\x18\x04 \x03(\x0b\x32\x06.Point\x12\x16\n\x06\x62ounds\x18\x05 \x01(\x0b\x32\x06.RectF\x12\'\n\x0bstroke_type\x18\x06 \x01(\x0e\x32\x12.Stroke.StrokeType\x12\x1d\n\rfitted_bounds\x18\x07 \x01(\x0b\x32\x06.RectF\"=\n\nStrokeType\x12\n\n\x06Normal\x10\x01\x12\x08\n\x04Line\x10\x02\x12\r\n\tHighlight\x10\x03\x12\n\n\x06Smooth\x10\x04\"/\n\x05Point\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\x10\n\x08pressure\x18\x03 \x01(\x02\"]\n\x05Shape\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.Shape.ShapeType\x12\x1a\n\x07\x65llipse\x18\xe8\x07 \x01(\x0b\x32\x08.Ellipse\"\x18\n\tShapeType\x12\x0b\n\x07\x45llipse\x10\x01\"\xc8\x01\n\x07\x45llipse\x12\r\n\x05\x63olor\x18\x01 \x01(\x05\x12\x0e\n\x06weight\x18\x02 \x01(\x02\x12\x10\n\x08\x63\x65nter_x\x18\x03 \x01(\x02\x12\x10\n\x08\x63\x65nter_y\x18\x04 \x01(\x02\x12\x10\n\x08radius_x\x18\x05 \x01(\x02\x12\x10\n\x08radius_y\x18\x06 \x01(\x02\x12\x16\n\x06\x62ounds\x18\x07 \x01(\x0b\x32\x06.RectF\x12\x14\n\x04oval\x18\x08 \x01(\x0b\x32\x06.RectF\x12\x13\n\x0bstart_angle\x18\t \x01(\x02\x12\x13\n\x0bsweep_angle\x18\n \x01(\x02\"\\\n\x04Text\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\r\n\x05\x63olor\x18\x02 \x01(\r\x12\x0e\n\x06weight\x18\x03 \x01(\x02\x12\x16\n\x06\x62ounds\x18\x04 \x01(\x0b\x32\x06.RectF\x12\x0f\n\x07version\x18\x05 \x01(\x05\"\x8d\x01\n\x05Image\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nimage_hash\x18\x02 \x01(\t\x12\x16\n\x06\x62ounds\x18\x03 \x01(\x0b\x32\x06.RectF\x12\x0e\n\x06\x66lip_x\x18\x04 \x01(\x08\x12\x0e\n\x06\x66lip_y\x18\x05 \x01(\x08\x12\x1a\n\x0b\x63rop_bounds\x18\x06 \x01(\x0b\x32\x05.Rect\x12\x10\n\x08rotation\x18\x07 \x01(\x05')
+  serialized_pb=_b('\n\rpapyrus.proto\">\n\x04Page\x12\x1f\n\nbackground\x18\x01 \x01(\x0b\x32\x0b.Background\x12\x15\n\x05layer\x18\x03 \x01(\x0b\x32\x06.Layer\"\x91\x03\n\nBackground\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.Background.Type\x12\r\n\x05width\x18\x04 \x01(\x02\x12\x0e\n\x06height\x18\x05 \x01(\x02\x12\r\n\x05\x63olor\x18\x06 \x01(\r\x12\x36\n\x16ruled_paper_background\x18\xe8\x07 \x01(\x0b\x32\x15.RuledPaperBackground\x12\x34\n\x15quad_paper_background\x18\xe9\x07 \x01(\x0b\x32\x14.QuadPaperBackground\x12+\n\x10\x62lank_background\x18\xea\x07 \x01(\x0b\x32\x10.BlankBackground\x12\'\n\x0epdf_background\x18\xeb\x07 \x01(\x0b\x32\x0e.PDFBackground\x12+\n\x10papyr_background\x18\xec\x07 \x01(\x0b\x32\x10.PapyrBackground\"D\n\x04Type\x12\x0e\n\nRuledPaper\x10\x01\x12\r\n\tQuadPaper\x10\x02\x12\t\n\x05\x42lank\x10\x03\x12\x07\n\x03PDF\x10\x04\x12\t\n\x05Papyr\x10\x05\"\x16\n\x14RuledPaperBackground\"\x15\n\x13QuadPaperBackground\"\x11\n\x0f\x42lankBackground\"$\n\rPDFBackground\x12\x13\n\x0bpage_number\x18\x03 \x02(\r\"\x1c\n\x0fPapyrBackground\x12\t\n\x01\x61\x18\x01 \x01(\t\"4\n\x05Layer\x12\x13\n\x04item\x18\x01 \x03(\x0b\x32\x05.Item\x12\x16\n\x06\x62ounds\x18\x02 \x01(\x0b\x32\x06.RectF\"@\n\x04Rect\x12\x0c\n\x04left\x18\x01 \x01(\x05\x12\r\n\x05right\x18\x02 \x01(\x05\x12\x0b\n\x03top\x18\x03 \x01(\x05\x12\x0e\n\x06\x62ottom\x18\x04 \x01(\x05\"A\n\x05RectF\x12\x0c\n\x04left\x18\x01 \x01(\x02\x12\r\n\x05right\x18\x02 \x01(\x02\x12\x0b\n\x03top\x18\x03 \x01(\x02\x12\x0e\n\x06\x62ottom\x18\x04 \x01(\x02\"\xb4\x01\n\x04Item\x12\x18\n\x04type\x18\x01 \x02(\x0e\x32\n.Item.Type\x12\x18\n\x06stroke\x18\xe8\x07 \x01(\x0b\x32\x07.Stroke\x12\x16\n\x05shape\x18\xe9\x07 \x01(\x0b\x32\x06.Shape\x12\x14\n\x04text\x18\xea\x07 \x01(\x0b\x32\x05.Text\x12\x16\n\x05image\x18\xeb\x07 \x01(\x0b\x32\x06.Image\"2\n\x04Type\x12\n\n\x06Stroke\x10\x01\x12\t\n\x05Shape\x10\x02\x12\x08\n\x04Text\x10\x03\x12\t\n\x05Image\x10\x04\"\xfe\x01\n\x06Stroke\x12\r\n\x05\x63olor\x18\x01 \x01(\r\x12\x0e\n\x06weight\x18\x02 \x01(\x02\x12\x1f\n\x0freference_point\x18\x03 \x01(\x0b\x32\x06.Point\x12\x15\n\x05point\x18\x04 \x03(\x0b\x32\x06.Point\x12\x16\n\x06\x62ounds\x18\x05 \x01(\x0b\x32\x06.RectF\x12\'\n\x0bstroke_type\x18\x06 \x01(\x0e\x32\x12.Stroke.StrokeType\x12\x1d\n\rfitted_bounds\x18\x07 \x01(\x0b\x32\x06.RectF\"=\n\nStrokeType\x12\n\n\x06Normal\x10\x01\x12\x08\n\x04Line\x10\x02\x12\r\n\tHighlight\x10\x03\x12\n\n\x06Smooth\x10\x04\"/\n\x05Point\x12\t\n\x01x\x18\x01 \x01(\x02\x12\t\n\x01y\x18\x02 \x01(\x02\x12\x10\n\x08pressure\x18\x03 \x01(\x02\"]\n\x05Shape\x12\x1e\n\x04type\x18\x01 \x02(\x0e\x32\x10.Shape.ShapeType\x12\x1a\n\x07\x65llipse\x18\xe8\x07 \x01(\x0b\x32\x08.Ellipse\"\x18\n\tShapeType\x12\x0b\n\x07\x45llipse\x10\x01\"\xc8\x01\n\x07\x45llipse\x12\r\n\x05\x63olor\x18\x01 \x01(\x05\x12\x0e\n\x06weight\x18\x02 \x01(\x02\x12\x10\n\x08\x63\x65nter_x\x18\x03 \x01(\x02\x12\x10\n\x08\x63\x65nter_y\x18\x04 \x01(\x02\x12\x10\n\x08radius_x\x18\x05 \x01(\x02\x12\x10\n\x08radius_y\x18\x06 \x01(\x02\x12\x16\n\x06\x62ounds\x18\x07 \x01(\x0b\x32\x06.RectF\x12\x14\n\x04oval\x18\x08 \x01(\x0b\x32\x06.RectF\x12\x13\n\x0bstart_angle\x18\t \x01(\x02\x12\x13\n\x0bsweep_angle\x18\n \x01(\x02\"\\\n\x04Text\x12\x0c\n\x04text\x18\x01 \x01(\t\x12\r\n\x05\x63olor\x18\x02 \x01(\r\x12\x0e\n\x06weight\x18\x03 \x01(\x02\x12\x16\n\x06\x62ounds\x18\x04 \x01(\x0b\x32\x06.RectF\x12\x0f\n\x07version\x18\x05 \x01(\x05\"\x8d\x01\n\x05Image\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nimage_hash\x18\x02 \x01(\t\x12\x16\n\x06\x62ounds\x18\x03 \x01(\x0b\x32\x06.RectF\x12\x0e\n\x06\x66lip_x\x18\x04 \x01(\x08\x12\x0e\n\x06\x66lip_y\x18\x05 \x01(\x08\x12\x1a\n\x0b\x63rop_bounds\x18\x06 \x01(\x0b\x32\x05.Rect\x12\x10\n\x08rotation\x18\x07 \x01(\x05')
 )
 
 
@@ -83,8 +83,8 @@ _ITEM_TYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=905,
-  serialized_end=955,
+  serialized_start=937,
+  serialized_end=987,
 )
 _sym_db.RegisterEnumDescriptor(_ITEM_TYPE)
 
@@ -113,8 +113,8 @@ _STROKE_STROKETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1151,
-  serialized_end=1212,
+  serialized_start=1183,
+  serialized_end=1244,
 )
 _sym_db.RegisterEnumDescriptor(_STROKE_STROKETYPE)
 
@@ -131,8 +131,8 @@ _SHAPE_SHAPETYPE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   options=None,
-  serialized_start=1332,
-  serialized_end=1356,
+  serialized_start=1364,
+  serialized_end=1388,
 )
 _sym_db.RegisterEnumDescriptor(_SHAPE_SHAPETYPE)
 
@@ -342,6 +342,13 @@ _PDFBACKGROUND = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='page_number', full_name='PDFBackground.page_number', index=0,
+      number=3, type=13, cpp_type=3, label=2,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -355,7 +362,7 @@ _PDFBACKGROUND = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=551,
-  serialized_end=566,
+  serialized_end=587,
 )
 
 
@@ -366,6 +373,13 @@ _PAPYRBACKGROUND = _descriptor.Descriptor(
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
+    _descriptor.FieldDescriptor(
+      name='a', full_name='PapyrBackground.a', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
@@ -378,8 +392,8 @@ _PAPYRBACKGROUND = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=568,
-  serialized_end=585,
+  serialized_start=589,
+  serialized_end=617,
 )
 
 
@@ -416,8 +430,8 @@ _LAYER = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=587,
-  serialized_end=639,
+  serialized_start=619,
+  serialized_end=671,
 )
 
 
@@ -468,8 +482,8 @@ _RECT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=641,
-  serialized_end=705,
+  serialized_start=673,
+  serialized_end=737,
 )
 
 
@@ -520,8 +534,8 @@ _RECTF = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=707,
-  serialized_end=772,
+  serialized_start=739,
+  serialized_end=804,
 )
 
 
@@ -580,8 +594,8 @@ _ITEM = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=775,
-  serialized_end=955,
+  serialized_start=807,
+  serialized_end=987,
 )
 
 
@@ -654,8 +668,8 @@ _STROKE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=958,
-  serialized_end=1212,
+  serialized_start=990,
+  serialized_end=1244,
 )
 
 
@@ -699,8 +713,8 @@ _POINT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1214,
-  serialized_end=1261,
+  serialized_start=1246,
+  serialized_end=1293,
 )
 
 
@@ -738,8 +752,8 @@ _SHAPE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1263,
-  serialized_end=1356,
+  serialized_start=1295,
+  serialized_end=1388,
 )
 
 
@@ -832,8 +846,8 @@ _ELLIPSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1359,
-  serialized_end=1559,
+  serialized_start=1391,
+  serialized_end=1591,
 )
 
 
@@ -891,8 +905,8 @@ _TEXT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1561,
-  serialized_end=1653,
+  serialized_start=1593,
+  serialized_end=1685,
 )
 
 
@@ -964,8 +978,8 @@ _IMAGE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1656,
-  serialized_end=1797,
+  serialized_start=1688,
+  serialized_end=1829,
 )
 
 _PAGE.fields_by_name['background'].message_type = _BACKGROUND

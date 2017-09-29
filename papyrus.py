@@ -6,6 +6,20 @@ import papyrus_pb2
 import cairocffi
 import math
 
+from pyPdf import PdfFileWriter, PdfFileReader
+
+class color:
+   PURPLE = '\033[95m'
+   CYAN = '\033[96m'
+   DARKCYAN = '\033[36m'
+   BLUE = '\033[94m'
+   GREEN = '\033[92m'
+   YELLOW = '\033[93m'
+   RED = '\033[91m'
+   BOLD = '\033[1m'
+   UNDERLINE = '\033[4m'
+   END = '\033[0m'
+
 
 DEBUG=False
 
@@ -18,6 +32,11 @@ def makedir(directory):
     except OSError as e:
         if e.errno != errno.EEXIST:
             raise
+
+def titlesafe(title):
+    if title is None or title == "":
+        return "Untitled Note"
+    return title
 
 def dirsafe(name):
     name = name.replace("/","_")
@@ -41,14 +60,14 @@ def cm_to_point(cm):
 def u32_to_4f(u):
     return [((u>>24) & 0xFF) / 255.0, ((u>>16) & 0xFF) / 255.0, ((u>>8) & 0xFF) / 255.0, (u & 0xFF) / 255.0]
 
-def convert_page(path, note_name, notebook_path, directory, page_number):
+def convert_page(path, note_name, notebook_path, directory, pdf_file, page_number):
     page = papyrus_pb2.Page()
     # Open and parse papyrus page using protobuf
     page.ParseFromString(open(path, 'rb').read())
     # Create a new pdf surface for drawing
 
     if page.background.width == 0 and page.background.height == 0:
-        print("Infinite page!")
+        print("\tInfinite page!")
 
         max_x = 0
         max_y = 0
@@ -63,7 +82,7 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
             elif item.type == papyrus_pb2.Item.Type.Value('Text'):
                 bounds = item.text.bounds
             else:
-                print item
+                print(item)
                 bounds = None
 
             if bounds is not None:
@@ -77,10 +96,8 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
         page.background.width = max_x + 1
         page.background.height = max_y + 1
 
-    if note_name is None:
-        note_name = "Untitled"
-    else:
-        print(note_name)
+    note_name = titlesafe(note_name)
+    print("\t%s" % note_name)
 
     note_path = directory + '/' + notebook_path + '/' + dirsafe(note_name)
     new_note_path = note_path
@@ -98,14 +115,16 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
     makedir(pdfpath)
 
     pdffile = pdfpath + '/page' + str(page_number) +'.pdf'
-    print("Source: %s\nOutput: %s" % (path, pdffile))
+    print("\tSource: %s\n\tOutput: %s" % (path, pdffile))
 
-    surface = cairocffi.PDFSurface(open(pdffile, 'w'), cm_to_point(page.background.width), cm_to_point(page.background.height))
+    pdf_out = open(pdffile, 'w')
+    surface = cairocffi.PDFSurface(pdf_out, cm_to_point(page.background.width), cm_to_point(page.background.height))
     context = cairocffi.Context(surface)
 
     # Paint the page white
-    context.set_source_rgb(1, 1, 1)
+    context.set_source_rgba(0, 0, 0, 0)
     context.paint()
+
 
     for item in page.layer.item:
         if item.type == papyrus_pb2.Item.Type.Value('Stroke'):
@@ -179,7 +198,28 @@ def convert_page(path, note_name, notebook_path, directory, page_number):
             print("Item of type {} not supported".format(papyrus_pb2.Item.Type.Name(item.type)))
     surface.flush()
     surface.finish()
+    pdf_out.close()
+
+    if page.background.HasField("pdf_background"):
+
+        try:
+            output_file = PdfFileWriter()
+            input_file = PdfFileReader(file(pdffile, "rb"))
+            pdf_file = PdfFileReader(file("./data/docs/" + pdf_file, "rb"))
+            pdf_page = pdf_file.getPage(page.background.pdf_background.page_number)
+
+            input_page = input_file.getPage(0)
+            pdf_page.mergePage(input_page)
+
+            output_file.addPage(pdf_page)
+
+            with open(pdffile+".tmp", "wb") as outputStream:
+                output_file.write(outputStream)
+            os.rename(pdffile+".tmp", pdffile)
+        except:
+            print("\t%sUnable to merge PDFs - maybe the PDF was malformed? Result was %s%s" % (color.RED, sys.exc_info()[0], color.END)) 
     
+    print("")
 
 print('Your Papyrus App contains the following notebooks:')
 
@@ -188,7 +228,7 @@ notebooks = c.fetchall()
 for i in notebooks:
     print("-", i[2])
 
-directory='./exported/'
+directory='./exported'
 makedir(directory)
 
 #directory = directory + time.strftime("%Y-%m-%d")
@@ -200,16 +240,24 @@ for i in notebooks:
     notes = getNotes(i[1])
 
     for j in notes:
-        print("%s: %s" % (j[0], j[1]))
+        print("%s%-50s%s (%s)" % (color.BOLD, titlesafe(j[1]), color.END,j[0]))
+        # Associated PDF file
+        pdfFile=None
+
+        # Checks for an associated PDF file
+        c.execute('SELECT hash FROM documents WHERE note_uuid= ?', (j[0],))
+        result = c.fetchone()
+        if result is not None:
+            print("\tThis note has this associated document: %s" % (result))
+            pdfFile = result[0]
 
         pages = getPages(j[0])
 
         count = 1
         for k in pages:
             if DEBUG:
-                if k[0] != '94f9fae3-6bb4-4c06-96f9-e1298001b3ec':
+                if k[0] != 'df636c3d-3daf-43c4-a342-0c96071f3c30':
                     continue
-            print("Processing page %d/%d of %s" % (count, len(pages), j[1]))
-            print(k)
-            convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, count)
+            print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
+            convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count)
             count += 1;
