@@ -5,6 +5,7 @@ import sys
 import papyrus_pb2
 import cairocffi
 import math
+import shutil
 
 from pyPdf import PdfFileWriter, PdfFileReader
 
@@ -217,9 +218,10 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
                 output_file.write(outputStream)
             os.rename(pdffile+".tmp", pdffile)
         except:
-            print("\t%sUnable to merge PDFs - maybe the PDF was malformed? Result was %s%s" % (color.RED, sys.exc_info()[0], color.END)) 
+            print("\t%sUnable to merge PDFs - maybe the PDF was malformed? Result was %s%s" % (color.RED, sys.exc_info()[0], color.END))
     
     print("")
+    return pdffile
 
 print('Your Papyrus App contains the following notebooks:')
 
@@ -254,10 +256,24 @@ for i in notebooks:
         pages = getPages(j[0])
 
         count = 1
+        files = []
         for k in pages:
             if DEBUG:
-                if k[0] != 'df636c3d-3daf-43c4-a342-0c96071f3c30':
+                if k[0] != 'f5f47fb9-3cde-4ba1-b549-dcc10305f8cc':
                     continue
             print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
-            convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count)
+            files.append(convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
             count += 1;
+        
+        # Merge pages
+        output_file = PdfFileWriter()
+        for k in files:
+            input_file = PdfFileReader(file(k, "rb")).getPage(0)
+            output_file.addPage(input_file)
+        final_pdf = directory + "/" + dirsafe(i[2]) + "/" + dirsafe(titlesafe(j[1])) + ".pdf"
+        with open(final_pdf, "wb") as outputStream:
+            output_file.write(outputStream)
+        try:
+            shutil.rmtree(directory + "/" + dirsafe(i[2]) + "/" + dirsafe(titlesafe(j[1])))
+        except:
+            ""
