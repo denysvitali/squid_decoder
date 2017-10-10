@@ -11,6 +11,28 @@ cairo to convert Squid page file into SVG.
 [I](https://github.com/denysvitali/) have extended his work adding more features
 like Ellipses, Text support and notes export based on the `papyrus.db` file.
 
+## Screenshots
+### Output
+With *Squid Decoder* you can convert your `papyrus.bak` file into a collection of converted PDF files.  
+If you're geek enough (like myself), you can even set up a CI and
+generate the PDFs remotely:
+#### Artifacts dir
+This is how the directory will look like after you run *Squid Decoder* on your `papyrus.bak` file. Your notes will be divided into folders that have the same name of the notebook that contiains them.  
+
+![Artitfacts Directory of Jenkins](./images/jenkins.png)
+
+#### Example 1
+Multi-colored path, highlights, shapes, you name it! *Squid Decoder* has your back. We (almost) have a 1:1 conversion. WYS (in Squid app) IWYG.
+![Generated Note 1](./images/1.png)
+
+#### Example 2
+![Generated Note 2](./images/2.png)
+
+## Process
+During the process, you'll be able to see what notes are being converted, and where they are going to be placed.  
+After the process terminates, you'll be able to browse your `exported/` folder and enjoy your PDF files.  
+![Process](./images/process.png)
+
 ## Background
 
 You can obtain those pages by making a local or cloud backup. This creates a file called
@@ -32,16 +54,16 @@ reversed because so far that's the only part I care about. The following feature
 engineered:
 
 * Paper background
-* PDF background
+* ~~PDF background~~
 * ~~Ellipse tool~~
 * ~~Text tool~~
-* Image tool
+* ~~Image tool~~
 
 Feel free to open an issue if you need it and encourage me to reverse engineer it. Or send a pull request if you've implemented it.
 
 ## Installation
 ```
-pip install cairocffi protobuf pypdf
+pip install cairocffi protobuf pypdf pillow
 ```
 
 ## Usage
