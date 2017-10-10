@@ -7,6 +7,8 @@ import cairocffi
 import math
 import shutil
 
+from PIL import Image
+
 from pyPdf import PdfFileWriter, PdfFileReader
 
 class color:
@@ -22,7 +24,7 @@ class color:
    END = '\033[0m'
 
 
-DEBUG=False
+DEBUG=True
 
 conn = sqlite3.connect('papyrus.db')
 c = conn.cursor()
@@ -164,7 +166,6 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
                 context.paint_with_alpha(argb[0])
             context.restore()
         elif item.type == papyrus_pb2.Item.Type.Value('Shape') and item.shape.ellipse is not None:
-
             width = item.shape.ellipse.weight * 0.3
 
             context.save()
@@ -193,6 +194,41 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
             scaledFont = cairocffi.ScaledFont(cairocffi.ToyFontFace("sans-serif"), size_m)
             glyphs = scaledFont.text_to_glyphs(cm_to_point(item.text.bounds.left), cm_to_point(item.text.bounds.bottom), item.text.text, False)
             context.show_glyphs(glyphs)
+            context.restore()
+
+        elif item.type == papyrus_pb2.Item.Type.Value('Image'):
+            if(DEBUG):
+                print("Got an image!")
+                print(item.image.image_hash)
+
+            # Convert JPEG image to PNG
+            im = Image.open("./data/imgs/" + item.image.image_hash)
+            im = im.crop((item.image.crop_bounds.left, item.image.crop_bounds.top, item.image.crop_bounds.right, item.image.crop_bounds.bottom))
+            im.save("./data/imgs/" + item.image.image_hash + ".png", "PNG")
+            im.close()
+
+            matrix = cairocffi.Matrix()
+
+            scale_x = cm_to_point(item.image.bounds.right-item.image.bounds.left)/(item.image.crop_bounds.right-item.image.crop_bounds.left)
+            scale_y = cm_to_point(item.image.bounds.bottom-item.image.bounds.top)/(item.image.crop_bounds.bottom-item.image.crop_bounds.top)
+            
+            if(DEBUG):
+                print("Scale X: %d" % (1/scale_x))
+                print("Scale Y: %d" % (1/scale_y))
+                print("Translate: %d" % cm_to_point(item.image.bounds.left))
+            matrix.scale(1/scale_x, 1/scale_y)
+            matrix.translate(-cm_to_point(item.image.bounds.left), -cm_to_point(item.image.bounds.top))
+
+            im_surface = cairocffi.ImageSurface.create_from_png("./data/imgs/" + item.image.image_hash + ".png")
+            im_surface_pattern = cairocffi.SurfacePattern(im_surface)
+
+            im_surface_pattern.set_filter(cairocffi.FILTER_GOOD)
+            im_surface_pattern.set_matrix(matrix)
+
+            context.save()
+            context.set_source(im_surface_pattern)
+            context.rectangle(cm_to_point(item.image.bounds.left), cm_to_point(item.image.bounds.top), cm_to_point(item.image.bounds.right-item.image.bounds.left), cm_to_point(item.image.bounds.bottom-item.image.bounds.top))
+            context.fill()
             context.restore()
         else:
             print(item)
@@ -259,7 +295,7 @@ for i in notebooks:
         files = []
         for k in pages:
             if DEBUG:
-                if k[0] != 'f5f47fb9-3cde-4ba1-b549-dcc10305f8cc':
+                if k[0] != '10418acb-20ea-4e42-87c9-75d5c77eb119':
                     continue
             print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
             files.append(convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
