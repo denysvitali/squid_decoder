@@ -24,7 +24,7 @@ class color:
    END = '\033[0m'
 
 
-DEBUG=True
+DEBUG=False
 
 conn = sqlite3.connect('papyrus.db')
 c = conn.cursor()
