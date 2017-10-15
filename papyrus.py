@@ -76,7 +76,7 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
         max_y = 0
 
         for item in page.layer.item:
-
+            bounds = None
             if item.type == papyrus_pb2.Item.Type.Value('Stroke'):
                 bounds = item.stroke.bounds
             elif item.type == papyrus_pb2.Item.Type.Value('Shape'):
@@ -86,12 +86,11 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
                 bounds = item.text.bounds
             else:
                 print(item)
-                bounds = None
 
             if bounds is not None:
                 if bounds.right > max_x:
                     max_x = bounds.right
-
+                    
                 if bounds.bottom > max_y:
                     max_y = bounds.bottom
             
