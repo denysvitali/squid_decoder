@@ -9,7 +9,7 @@ import shutil
 
 from PIL import Image
 
-from pyPdf import PdfFileWriter, PdfFileReader
+from PyPDF2 import PdfFileWriter, PdfFileReader
 
 class color:
    PURPLE = '\033[95m'
@@ -25,8 +25,12 @@ class color:
 
 
 DEBUG=False
+directory_ = "./"
+if len(sys.argv) == 2:
+    directory_ = sys.argv[1]
 
-conn = sqlite3.connect('papyrus.db')
+conn = sqlite3.connect(directory_+'papyrus.db')
+
 c = conn.cursor()
 
 def makedir(directory):
@@ -201,9 +205,9 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
                 print(item.image.image_hash)
 
             # Convert JPEG image to PNG
-            im = Image.open("./data/imgs/" + item.image.image_hash)
+            im = Image.open(directory_+"data/imgs/" + item.image.image_hash)
             im = im.crop((item.image.crop_bounds.left, item.image.crop_bounds.top, item.image.crop_bounds.right, item.image.crop_bounds.bottom))
-            im.save("./data/imgs/" + item.image.image_hash + ".png", "PNG")
+            im.save(directory_+"data/imgs/" + item.image.image_hash + ".png", "PNG")
             im.close()
 
             matrix = cairocffi.Matrix()
@@ -218,7 +222,7 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
             matrix.scale(1/scale_x, 1/scale_y)
             matrix.translate(-cm_to_point(item.image.bounds.left), -cm_to_point(item.image.bounds.top))
 
-            im_surface = cairocffi.ImageSurface.create_from_png("./data/imgs/" + item.image.image_hash + ".png")
+            im_surface = cairocffi.ImageSurface.create_from_png(directory_+"./data/imgs/" + item.image.image_hash + ".png")
             im_surface_pattern = cairocffi.SurfacePattern(im_surface)
 
             im_surface_pattern.set_filter(cairocffi.FILTER_GOOD)
@@ -241,7 +245,7 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
         try:
             output_file = PdfFileWriter()
             input_file = PdfFileReader(file(pdffile, "rb"))
-            pdf_file = PdfFileReader(file("./data/docs/" + pdf_file, "rb"))
+            pdf_file = PdfFileReader(file(directory_+"data/docs/" + pdf_file, "rb"))
             pdf_page = pdf_file.getPage(page.background.pdf_background.page_number)
 
             input_page = input_file.getPage(0)
@@ -265,7 +269,7 @@ notebooks = c.fetchall()
 for i in notebooks:
     print("-", i[2])
 
-directory='./exported'
+directory = directory_+'exported'
 makedir(directory)
 
 #directory = directory + time.strftime("%Y-%m-%d")
@@ -297,7 +301,7 @@ for i in notebooks:
                 if k[0] != '10418acb-20ea-4e42-87c9-75d5c77eb119':
                     continue
             print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
-            files.append(convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
+            files.append(convert_page(directory_+'data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
             count += 1;
         
         # Merge pages
