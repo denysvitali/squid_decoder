@@ -9,7 +9,16 @@ import shutil
 
 from PIL import Image
 
-from PyPDF2 import PdfFileWriter, PdfFileReader
+
+# This is a quick fix to check whether we can use pyPdf (depreciated) or PyPDF2
+import pip
+installed_packages = pip.get_installed_distributions()
+flat_installed_packages = [package.project_name for package in installed_packages]
+
+if 'PyPDF2' in flat_installed_packages:
+    from PyPDF2 import PdfFileWriter, PdfFileReader
+elif 'pyPdf' in flat_installed_packages:
+    from PyPDF2 import PdfFileWriter, PdfFileReader
 
 class color:
    PURPLE = '\033[95m'
