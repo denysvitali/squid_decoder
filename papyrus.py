@@ -293,9 +293,6 @@ for i in notebooks:
         count = 1
         files = []
         for k in pages:
-            if DEBUG:
-                if k[0] != '10418acb-20ea-4e42-87c9-75d5c77eb119':
-                    continue
             print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
             files.append(convert_page('./data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
             count += 1;
