@@ -287,7 +287,7 @@ for i in notebooks:
         if result is not None:
             print("\tThis note has this associated document: %s" % (result))
             pdfFile = result[0]
-
+            
         pages = getPages(j[0])
 
         count = 1
@@ -309,3 +309,5 @@ for i in notebooks:
             shutil.rmtree(directory + "/" + dirsafe(i[2]) + "/" + dirsafe(titlesafe(j[1])))
         except:
             ""
+
+        os.utime(final_pdf, (j[3], j[3]))
