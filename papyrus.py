@@ -103,10 +103,10 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
             if bounds is not None:
                 if bounds.right > max_x:
                     max_x = bounds.right
-                    
+
                 if bounds.bottom > max_y:
                     max_y = bounds.bottom
-            
+
 
         page.background.width = max_x + 1
         page.background.height = max_y + 1
@@ -123,7 +123,7 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
     #    num += 1
 
     makedir(note_path)
-    
+
     note_path = new_note_path
 
     pdfpath = note_path + '/pdf'
@@ -223,7 +223,7 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
 
             scale_x = cm_to_point(item.image.bounds.right-item.image.bounds.left)/(item.image.crop_bounds.right-item.image.crop_bounds.left)
             scale_y = cm_to_point(item.image.bounds.bottom-item.image.bounds.top)/(item.image.crop_bounds.bottom-item.image.crop_bounds.top)
-            
+
             if(DEBUG):
                 print("Scale X: %d" % (1/scale_x))
                 print("Scale Y: %d" % (1/scale_y))
@@ -267,7 +267,6 @@ def convert_page(path, note_name, notebook_path, directory, pdf_file, page_numbe
             os.rename(pdffile+".tmp", pdffile)
         except:
             print("\t%sUnable to merge PDFs - maybe the PDF was malformed? Result was %s%s" % (color.RED, sys.exc_info()[0], color.END))
-    
     print("")
     return pdffile
 
@@ -300,7 +299,6 @@ for i in notebooks:
         if result is not None:
             print("\tThis note has this associated document: %s" % (result))
             pdfFile = result[0]
-            
         pages = getPages(j[0])
 
         count = 1
@@ -309,7 +307,7 @@ for i in notebooks:
             print("\tProcessing page %d/%d of %s" % (count, len(pages), j[1]))
             files.append(convert_page(base_directory+'data/pages/' + k[0] + '.page', j[1], dirsafe(i[2]), directory, pdfFile, count))
             count += 1;
-        
+
         # Merge pages
         output_file = PdfFileWriter()
         for k in files:
@@ -324,7 +322,5 @@ for i in notebooks:
             ""
 
         unix_ts = int(j[3]/1000)
-
-        print("utime: %d" % unix_ts)
 
         os.utime(final_pdf, (unix_ts,unix_ts))
