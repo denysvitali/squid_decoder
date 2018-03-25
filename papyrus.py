@@ -9,6 +9,8 @@ import shutil
 
 from PIL import Image
 
+reload(sys)
+sys.setdefaultencoding('utf8')
 
 # This is a quick fix to check whether we can use pyPdf (depreciated) or PyPDF2
 import pip
